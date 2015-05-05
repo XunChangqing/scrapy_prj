@@ -10,10 +10,10 @@ from tutorial.items import DmozItem
 
 
 class MySpider(CrawlSpider):
-    name = 'pornhub_spider'
-    allowed_domains = ['pornhub.com']
-    start_urls = ['http://www.pornhub.com/albums?page=1']
-    #start_urls = ['http://www.pornhub.com/album/5785431']
+    name = 'fashion_haibao_spider'
+    allowed_domains = ['haibao.com']
+    start_urls = ['http://fashion.haibao.com/fashion/%e6%b3%b3%e8%a3%85/1.htm']
+    #start_urls = ['http://pic.haibao.com/pic/11943935.htm']
 
     rules = (
         # Extract links matching 'category.php' (but not matching 'subsection.php')
@@ -23,19 +23,12 @@ class MySpider(CrawlSpider):
         # LinkExtractor(allow=('forumdisplay.php?fid=5.*', ))),
 
         # Rule(
+        # LinkExtractor(allow=('fashion\/泳装\/\d\.htm', ))),
+
         Rule(
-            LinkExtractor(allow=('http://www\.pornhub\.com/albums\?page=\d*',))),
-
+            LinkExtractor(allow=('fashion/%e6%b3%b3%e8%a3%85/\d*\.htm',))),
         Rule(LinkExtractor(
-            allow=('/album/\d*',), restrict_xpaths=('//div[@class="photoAlbumListBlock"]'))),
-
-        Rule(LinkExtractor(
-            allow=('/photo/\d*',), restrict_xpaths=('//div[@class="photoAlbumListBlock"]/a')), callback='parse_item'),
-        #Rule(LinkExtractor(
-            #allow=('/photo/\d*',), restrict_xpaths=('//div[@class="photoAlbumListBlock"]/a'))),
-
-        #Rule(LinkExtractor(
-            #allow=('pic/\d*\.htm',), restrict_xpaths=('//div[@class="m8"]')), callback='parse_item'),
+            allow=('pic/\d*\.htm',), restrict_xpaths=('//div[@class="m8"]')), callback='parse_item'),
 
 
         # Extract links matching 'item.php' and parse them with the
@@ -78,6 +71,6 @@ class MySpider(CrawlSpider):
         self.log('Hi, this is an thread! %s' % response.url)
         item = DmozItem()
         item['image_urls'] = []
-        for sel in response.xpath('//div[@class=\"thumbImage float-left\"]/a/img/@src'):
+        for sel in response.xpath('//img/@bigsrc'):
             item['image_urls'].append(sel.extract())
         return item
